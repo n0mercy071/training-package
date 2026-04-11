@@ -11,4 +11,6 @@ interface WorkoutActionRepositoryInterface
     public function getMaxId(): ?int;
 
     public function getTableName(): string;
+
+    public function getName(int $actionId): string;
 }

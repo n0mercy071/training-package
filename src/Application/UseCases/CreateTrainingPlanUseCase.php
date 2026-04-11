@@ -10,11 +10,11 @@ use N0mercy\TrainingPackage\Domain\Entities\TrainingPlan;
 use N0mercy\TrainingPackage\Domain\Factory\TrainingPlanFactoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\TrainingPlanRepositoryInterface;
 
-class CreateTrainingPlanUseCase
+readonly class CreateTrainingPlanUseCase
 {
     public function __construct(
         private TrainingPlanRepositoryInterface $trainingPlanRepository,
-        private TrainingPlanFactoryInterface $trainingPlanFactory
+        private TrainingPlanFactoryInterface    $trainingPlanFactory
     )
     {
     }
