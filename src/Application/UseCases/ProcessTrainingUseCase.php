@@ -42,8 +42,10 @@ readonly class ProcessTrainingUseCase
         return new TrainingDTO(
             $trainingPlan->getId(),
             $trainingPlan->getName(),
-            $this->workoutActionRepository->getName($workout->getActionId()),
-            $workout->getCount()
+            is_null($workout) ?
+                null :
+                $this->workoutActionRepository->getName($workout->getActionId()),
+            is_null($workout) ? null : $workout->getCount()
         );
     }
 }

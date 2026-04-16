@@ -9,6 +9,7 @@ use N0mercy\TrainingPackage\Application\DTO\TrainingDTO;
 use N0mercy\TrainingPackage\Application\Exception\TrainingNotFoundException;
 use N0mercy\TrainingPackage\Application\UseCases\ProcessTrainingUseCase;
 use N0mercy\TrainingPackage\Domain\Exception\TrainingPlanEmptyException;
+use N0mercy\TrainingPackage\Domain\Exception\TrainingPlanIdNotPositive;
 use N0mercy\TrainingPackage\Domain\Repository\TrainingRepositoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\WorkoutActionRepositoryInterface;
 use N0mercy\TrainingPackage\Tests\TestCase;
@@ -68,5 +69,28 @@ class ProcessTrainingUseCaseTest extends TestCase
         $this->useCase->handle($trainingPlanId, $userId, 10);
 
         // ass
+    }
+
+    /**
+     * @throws TrainingNotFoundException
+     * @throws TrainingPlanEmptyException
+     * @throws TrainingPlanIdNotPositive
+     */
+    public function testHandleCompleteTraining(): void
+    {
+        // arr
+        $trainingPlan = $this->createTrainingPlan();
+        $trainingPlan->setId(1);
+        $trainingPlan->addWorkout($this->createWorkout());
+        $this->setFoundTrainingRepositoryMock($trainingPlan);
+
+        // act
+        $dto = $this->useCase->handle($trainingPlan->getId(), 1, 10);
+
+        // ass
+        $this->assertEquals($trainingPlan->getName(), $dto->trainingPlanName);
+        $this->assertEquals($trainingPlan->getId(), $dto->trainingPlanId);
+        $this->assertNull($dto->workoutName);
+        $this->assertNull($dto->workoutCount);
     }
 }

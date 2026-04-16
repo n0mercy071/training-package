@@ -11,8 +11,8 @@ readonly class TrainingDTO
     public function __construct(
         public int    $trainingPlanId,
         public string $trainingPlanName,
-        public string $workoutName,
-        public int    $workoutCount,
+        public ?string $workoutName,
+        public ?int    $workoutCount,
     )
     {
     }

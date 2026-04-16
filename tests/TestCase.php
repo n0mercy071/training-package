@@ -21,12 +21,14 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
+    protected ?TrainingPlan $foundTrainingPlanTrainingRepository = null;
     protected Generator $faker;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->faker = FakerTool::faker();
+        $this->foundTrainingPlanTrainingRepository = null;
     }
 
     public function createWorkout(): Workout
@@ -39,9 +41,14 @@ class TestCase extends BaseTestCase
 
     public function createTrainingPlan(): TrainingPlan
     {
-        $plan = (new TrainingPlanFactory())->create(
+        return (new TrainingPlanFactory())->create(
             $this->faker->words(2, true),
         );
+    }
+
+    public function createTrainingPlanWithWorkouts(): TrainingPlan
+    {
+        $plan = $this->createTrainingPlan();
 
         $plan->addWorkout($this->createWorkout());
         $plan->addWorkout($this->createWorkout());
@@ -82,13 +89,23 @@ class TestCase extends BaseTestCase
      */
     protected function findTrainingRepositoryMock(int $id, int $userId): ?TrainingPlan
     {
+        if (isset($this->foundTrainingPlanTrainingRepository)) {
+            return $this->foundTrainingPlanTrainingRepository;
+        }
+
         if ($id > 0) {
-            $plan = $this->createTrainingPlan();
+            $plan = $this->createTrainingPlanWithWorkouts();
             $plan->setId($id);
+            $this->foundTrainingPlanTrainingRepository = $plan;
 
             return $plan;
         }
 
         return null;
+    }
+
+    protected function setFoundTrainingRepositoryMock(TrainingPlan $trainingPlan): void
+    {
+        $this->foundTrainingPlanTrainingRepository = $trainingPlan;
     }
 }

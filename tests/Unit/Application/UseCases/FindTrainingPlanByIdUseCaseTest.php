@@ -28,7 +28,7 @@ class FindTrainingPlanByIdUseCaseTest extends TestCase
         // arr
         $trainingPlanId = 1;
         $userId = 1;
-        $trainingPlan = $this->createTrainingPlan();
+        $trainingPlan = $this->createTrainingPlanWithWorkouts();
         $trainingPlan->setId($trainingPlanId);
         $this->trainingPlanRepository
             ->expects($this->once())

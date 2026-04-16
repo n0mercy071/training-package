@@ -34,7 +34,7 @@ class TrainingPlanTest extends TestCase
         $this->trainingPlanRepository = $this->createMock(TrainingPlanRepositoryInterface::class);
         $this->trainingPlanRepository
             ->method('getById')
-            ->willReturn($this->createTrainingPlan());
+            ->willReturn($this->createTrainingPlanWithWorkouts());
     }
 
     /**
