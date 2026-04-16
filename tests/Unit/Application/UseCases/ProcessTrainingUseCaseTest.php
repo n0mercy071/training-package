@@ -18,12 +18,17 @@ class ProcessTrainingUseCaseTest extends TestCase
 {
     private TrainingRepositoryInterface&MockObject $trainingRepository;
     private WorkoutActionRepositoryInterface&MockObject $workoutActionRepository;
+    private ProcessTrainingUseCase $useCase;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->trainingRepository = $this->createMockTrainingRepository();
         $this->workoutActionRepository = $this->createMockWorkoutActionRepository();
+        $this->useCase = new ProcessTrainingUseCase(
+            $this->trainingRepository,
+            $this->workoutActionRepository,
+        );
     }
 
     /**
@@ -40,15 +45,28 @@ class ProcessTrainingUseCaseTest extends TestCase
             ->expects($this->once())
             ->method('find')
             ->with($trainingPlanId, $userId);
-        $useCase = new ProcessTrainingUseCase(
-            $this->trainingRepository,
-            $this->workoutActionRepository,
-        );
 
         // act
-        $dto = $useCase->handle($trainingPlanId, $userId, $count);
+        $dto = $this->useCase->handle($trainingPlanId, $userId, $count);
 
         // ass
         $this->assertInstanceOf(TrainingDTO::class, $dto);
+    }
+
+    /**
+     * @throws TrainingNotFoundException
+     * @throws TrainingPlanEmptyException
+     */
+    public function testHandleTrainingNotFound(): void
+    {
+        // arr
+        $trainingPlanId = -1;
+        $userId = 1;
+
+        // act
+        $this->expectException(TrainingNotFoundException::class);
+        $this->useCase->handle($trainingPlanId, $userId, 10);
+
+        // ass
     }
 }
