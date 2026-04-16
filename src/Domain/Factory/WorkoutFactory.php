@@ -9,8 +9,8 @@ use N0mercy\TrainingPackage\Domain\Entities\Workout;
 
 class WorkoutFactory implements WorkoutFactoryInterface
 {
-    public function create(int $actionId): Workout
+    public function create(int $actionId, int $count): Workout
     {
-        return new Workout($actionId);
+        return new Workout($actionId, $count);
     }
 }

@@ -12,7 +12,6 @@ use N0mercy\TrainingPackage\Domain\Factory\TrainingPlanFactory;
 use N0mercy\TrainingPackage\Domain\Factory\TrainingPlanFactoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\TrainingPlanRepositoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\WorkoutActionRepositoryInterface;
-use N0mercy\TrainingPackage\Tests\Fixtures\Domain\WorkoutFixture;
 use N0mercy\TrainingPackage\Tests\TestCase;
 
 class CreateTrainingPlanUseCaseTest extends TestCase
@@ -31,7 +30,7 @@ class CreateTrainingPlanUseCaseTest extends TestCase
         $workoutActionRepository = $this->createMock(WorkoutActionRepositoryInterface::class);
         $workoutActionRepository->method('exists')->willReturn(true);
         $this->workouts = [
-            WorkoutFixture::create()
+            $this->createWorkout(),
         ];
         $this->trainingPlanFactory = new TrainingPlanFactory();
         $this->trainingPlanRepository = $this->createMock(TrainingPlanRepositoryInterface::class);

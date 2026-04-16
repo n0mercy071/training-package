@@ -7,10 +7,11 @@ namespace N0mercy\TrainingPackage\Domain\Entities;
 
 class Workout
 {
-    private ?int $count = null;
+    private ?int $completed = null;
 
     public function __construct(
         private readonly int $actionId,
+        private readonly int $count
     )
     {
     }
@@ -20,13 +21,18 @@ class Workout
         return $this->actionId;
     }
 
-    public function getCount(): ?int
+    public function getCount(): int
     {
         return $this->count;
     }
 
     public function completed(int $count): void
     {
-        $this->count = $count;
+        $this->completed = $count;
+    }
+
+    public function getCompleted(): ?int
+    {
+        return $this->completed;
     }
 }

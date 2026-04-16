@@ -8,7 +8,6 @@ namespace N0mercy\TrainingPackage\Tests\Unit\Application\UseCases;
 use N0mercy\TrainingPackage\Application\UseCases\FindTrainingPlanByIdUseCase;
 use N0mercy\TrainingPackage\Domain\Exception\TrainingPlanIdNotPositive;
 use N0mercy\TrainingPackage\Domain\Repository\TrainingPlanRepositoryInterface;
-use N0mercy\TrainingPackage\Tests\Fixtures\Domain\TrainingPlanFixture;
 use N0mercy\TrainingPackage\Tests\TestCase;
 
 class FindTrainingPlanByIdUseCaseTest extends TestCase
@@ -29,7 +28,7 @@ class FindTrainingPlanByIdUseCaseTest extends TestCase
         // arr
         $trainingPlanId = 1;
         $userId = 1;
-        $trainingPlan = TrainingPlanFixture::createTrainingPlanWithWorkouts();
+        $trainingPlan = $this->createTrainingPlan();
         $trainingPlan->setId($trainingPlanId);
         $this->trainingPlanRepository
             ->expects($this->once())

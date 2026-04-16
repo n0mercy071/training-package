@@ -87,7 +87,7 @@ class TrainingPlan
         }
 
         foreach ($this->workouts as $workout) {
-            if (!is_null($workout->getCount())) {
+            if (!is_null($workout->getCompleted())) {
                 continue;
             }
 
@@ -107,7 +107,7 @@ class TrainingPlan
         return count(
             array_filter(
                 $this->workouts,
-                fn (Workout $workout) => !is_null($workout->getCount())
+                fn (Workout $workout) => !is_null($workout->getCompleted())
             )
         );
     }

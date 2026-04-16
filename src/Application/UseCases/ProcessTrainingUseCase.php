@@ -6,31 +6,39 @@ declare(strict_types=1);
 namespace N0mercy\TrainingPackage\Application\UseCases;
 
 use N0mercy\TrainingPackage\Application\DTO\TrainingDTO;
+use N0mercy\TrainingPackage\Application\Exception\TrainingNotFoundException;
 use N0mercy\TrainingPackage\Domain\Exception\TrainingPlanEmptyException;
-use N0mercy\TrainingPackage\Domain\Repository\TrainingPlanRepositoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\TrainingRepositoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\WorkoutActionRepositoryInterface;
 
-readonly class StartTrainingUseCase
+readonly class ProcessTrainingUseCase
 {
+
     public function __construct(
-        private TrainingPlanRepositoryInterface $trainingPlanRepository,
-        private TrainingRepositoryInterface $trainingRepository,
+        private TrainingRepositoryInterface      $trainingRepository,
         private WorkoutActionRepositoryInterface $workoutActionRepository,
     )
     {
     }
 
     /**
+     * @throws TrainingNotFoundException
      * @throws TrainingPlanEmptyException
      */
-    public function handle(int $id, int $userId): TrainingDTO
+    public function handle(int $trainingPlanId, int $userId, int $count): TrainingDTO
     {
-        $trainingPlan = $this->trainingPlanRepository->getById($id, $userId);
+        $trainingPlan = $this->trainingRepository->find($trainingPlanId, $userId);
+        if (is_null($trainingPlan)) {
+            throw new TrainingNotFoundException(
+                'Training not found for user ' . $userId,
+            );
+        }
 
         $workout = $trainingPlan->getCurrentWorkout();
+        $workout->completed($count);
         $trainingPlan = $this->trainingRepository->save($trainingPlan, $userId);
 
+        $workout = $trainingPlan->getCurrentWorkout();
         return new TrainingDTO(
             $trainingPlan->getId(),
             $trainingPlan->getName(),

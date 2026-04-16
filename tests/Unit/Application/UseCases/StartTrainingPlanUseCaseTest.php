@@ -12,7 +12,6 @@ use N0mercy\TrainingPackage\Domain\Exception\TrainingPlanEmptyException;
 use N0mercy\TrainingPackage\Domain\Repository\TrainingPlanRepositoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\TrainingRepositoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\WorkoutActionRepositoryInterface;
-use N0mercy\TrainingPackage\Tests\Fixtures\Domain\TrainingPlanFixture;
 use N0mercy\TrainingPackage\Tests\TestCase;
 
 class StartTrainingPlanUseCaseTest extends TestCase
@@ -58,6 +57,10 @@ class StartTrainingPlanUseCaseTest extends TestCase
             ->method('getName')
             ->with($workout->getActionId())
             ->willReturn('test workout');
+        $this->trainingRepository
+            ->method('save')
+            ->with($trainingPlan, $userId)
+            ->willReturn($trainingPlan);
         $useCase = new StartTrainingUseCase(
             $this->trainingPlanRepository,
             $this->trainingRepository,

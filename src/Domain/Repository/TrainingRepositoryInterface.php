@@ -9,5 +9,7 @@ use N0mercy\TrainingPackage\Domain\Entities\TrainingPlan;
 
 interface TrainingRepositoryInterface
 {
-    public function save(TrainingPlan $trainingPlan, int $userId);
+    public function save(TrainingPlan $trainingPlan, int $userId): TrainingPlan;
+
+    public function find(int $trainingPlanId, int $userId): ?TrainingPlan;
 }
