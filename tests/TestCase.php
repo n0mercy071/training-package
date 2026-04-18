@@ -7,11 +7,13 @@ namespace N0mercy\TrainingPackage\Tests;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Faker\Generator;
+use N0mercy\TrainingPackage\Application\DTO\GetPageTrainingPlanDTO;
 use N0mercy\TrainingPackage\Domain\Entities\TrainingPlan;
 use N0mercy\TrainingPackage\Domain\Entities\Workout;
 use N0mercy\TrainingPackage\Domain\Exception\TrainingPlanIdNotPositive;
 use N0mercy\TrainingPackage\Domain\Factory\TrainingPlanFactory;
 use N0mercy\TrainingPackage\Domain\Factory\WorkoutFactory;
+use N0mercy\TrainingPackage\Domain\Repository\TrainingPlanRepositoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\TrainingRepositoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\WorkoutActionRepositoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\WorkoutLogRepositoryInterface;
@@ -23,6 +25,7 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 class TestCase extends BaseTestCase
 {
     protected ?TrainingPlan $foundTrainingPlanTrainingRepository = null;
+    protected ?GetPageTrainingPlanDTO $getPageTrainingPlanDTO = null;
     protected Generator $faker;
 
     protected function setUp(): void
@@ -55,6 +58,36 @@ class TestCase extends BaseTestCase
         $plan->addWorkout($this->createWorkout());
 
         return $plan;
+    }
+
+    public function getPageTrainingPlanDTO(int $page, int $pageSize): GetPageTrainingPlanDTO
+    {
+        if (!$this->getPageTrainingPlanDTO) {
+            $this->getPageTrainingPlanDTO = new GetPageTrainingPlanDTO(
+                $page,
+                $pageSize,
+                intdiv(2, $pageSize) + 1,
+                2,
+                [
+                    $this->createTrainingPlanWithWorkouts(),
+                    $this->createTrainingPlanWithWorkouts(),
+                ]
+            );
+        }
+
+        return $this->getPageTrainingPlanDTO;
+    }
+
+    public function createMockTrainingPlanRepository(): TrainingPlanRepositoryInterface&MockObject
+    {
+        $mock = $this->createMock(TrainingPlanRepositoryInterface::class);
+
+        $mock->method('getPage')
+            ->willReturnCallback(function (int $userId, int $page, int $pageSize) {
+                return $this->getPageTrainingPlanDTO($page, $pageSize);
+            });
+
+        return $mock;
     }
 
     public function createMockTrainingRepository(): TrainingRepositoryInterface&MockObject
