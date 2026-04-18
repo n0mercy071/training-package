@@ -12,6 +12,7 @@ use N0mercy\TrainingPackage\Domain\Exception\TrainingPlanEmptyException;
 use N0mercy\TrainingPackage\Domain\Exception\TrainingPlanIdNotPositive;
 use N0mercy\TrainingPackage\Domain\Repository\TrainingRepositoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\WorkoutActionRepositoryInterface;
+use N0mercy\TrainingPackage\Domain\Repository\WorkoutLogRepositoryInterface;
 use N0mercy\TrainingPackage\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -19,6 +20,7 @@ class ProcessTrainingUseCaseTest extends TestCase
 {
     private TrainingRepositoryInterface&MockObject $trainingRepository;
     private WorkoutActionRepositoryInterface&MockObject $workoutActionRepository;
+    private WorkoutLogRepositoryInterface&MockObject $workoutLogRepository;
     private ProcessTrainingUseCase $useCase;
 
     protected function setUp(): void
@@ -26,9 +28,11 @@ class ProcessTrainingUseCaseTest extends TestCase
         parent::setUp();
         $this->trainingRepository = $this->createMockTrainingRepository();
         $this->workoutActionRepository = $this->createMockWorkoutActionRepository();
+        $this->workoutLogRepository = $this->createWorkoutLogRepositoryMock();
         $this->useCase = new ProcessTrainingUseCase(
             $this->trainingRepository,
             $this->workoutActionRepository,
+            $this->workoutLogRepository,
         );
     }
 
@@ -83,6 +87,9 @@ class ProcessTrainingUseCaseTest extends TestCase
         $trainingPlan->setId(1);
         $trainingPlan->addWorkout($this->createWorkout());
         $this->setFoundTrainingRepositoryMock($trainingPlan);
+        $this->workoutLogRepository
+            ->expects($this->once())
+            ->method('save');
 
         // act
         $dto = $this->useCase->handle($trainingPlan->getId(), 1, 10);

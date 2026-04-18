@@ -10,6 +10,7 @@ use N0mercy\TrainingPackage\Application\Exception\TrainingNotFoundException;
 use N0mercy\TrainingPackage\Domain\Exception\TrainingPlanEmptyException;
 use N0mercy\TrainingPackage\Domain\Repository\TrainingRepositoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\WorkoutActionRepositoryInterface;
+use N0mercy\TrainingPackage\Domain\Repository\WorkoutLogRepositoryInterface;
 
 readonly class ProcessTrainingUseCase
 {
@@ -17,6 +18,7 @@ readonly class ProcessTrainingUseCase
     public function __construct(
         private TrainingRepositoryInterface      $trainingRepository,
         private WorkoutActionRepositoryInterface $workoutActionRepository,
+        private WorkoutLogRepositoryInterface    $workoutLogRepository,
     )
     {
     }
@@ -36,6 +38,7 @@ readonly class ProcessTrainingUseCase
 
         $workout = $trainingPlan->getCurrentWorkout();
         $workout->completed($count);
+        $this->workoutLogRepository->save($workout);
         $trainingPlan = $this->trainingRepository->save($trainingPlan, $userId);
 
         $workout = $trainingPlan->getCurrentWorkout();

@@ -14,6 +14,7 @@ use N0mercy\TrainingPackage\Domain\Factory\TrainingPlanFactory;
 use N0mercy\TrainingPackage\Domain\Factory\WorkoutFactory;
 use N0mercy\TrainingPackage\Domain\Repository\TrainingRepositoryInterface;
 use N0mercy\TrainingPackage\Domain\Repository\WorkoutActionRepositoryInterface;
+use N0mercy\TrainingPackage\Domain\Repository\WorkoutLogRepositoryInterface;
 use N0mercy\TrainingPackage\Tests\Tools\FakerTool;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase as BaseTestCase;
@@ -82,6 +83,15 @@ class TestCase extends BaseTestCase
     public function createMockWorkoutActionRepository(): WorkoutActionRepositoryInterface&MockObject
     {
         return $this->createMock(WorkoutActionRepositoryInterface::class);
+    }
+
+    public function createWorkoutLogRepositoryMock(): WorkoutLogRepositoryInterface&MockObject
+    {
+        $mock = $this->createMock(WorkoutLogRepositoryInterface::class);
+
+        $mock->method('save');
+
+        return $mock;
     }
 
     /**
